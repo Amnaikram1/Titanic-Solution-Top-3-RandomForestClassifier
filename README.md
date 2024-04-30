@@ -1,72 +1,92 @@
-# Introduction to Kaggle and the Titanic Competition
+# Titanic Machine Learning Competition: Feature Engineering and Modeling Insights
 
-Have you ever wondered how data scientists predict things like who survived the Titanic disaster? Well, Kaggle is where the magic happens! It's like a big online playground for people who love playing with data.
+## Overview
 
-The Titanic competition on Kaggle is super famous because it's perfect for beginners. You get to use real data from the Titanic to try and predict who survived. It's kind of like solving a mystery with numbers!
+The journey through the Titanic dataset encompasses three pivotal stages: Exploratory Data Analysis (EDA), Feature Engineering, and Model Building.
 
-I decided to give it a shot myself, even though I'm pretty new to this whole data science thing. What followed was a journey of exploration and learning, as I dove into the Titanic dataset to see what I could uncover.
+### Dataset Information
 
-## Background EDA
+- **Training Set:** 891 rows, 12 features (including the target variable 'Survived')
+- **Test Set:** 418 rows, 11 features
+- **Target Variable:** 'Survived' (0 or 1)
 
-The sinking of the Titanic remains one of the most captivating tales in maritime history. The tragic events of April 15, 1912, saw the "unsinkable" RMS Titanic meet its demise after a fateful encounter with an iceberg. Among the 2224 souls aboard, only 722 would live to tell the tale. It's a story steeped in tragedy, heroism, and the stark realities of class distinction.
+### A. Exploratory Data Analysis:
 
-### The Challenge: Predicting Survival
+#### 1. Handling Missing Values
+The initial step in our analysis involved addressing missing values in both the training and test datasets. Utilizing `isnull().sum()`, we assessed the extent of missingness across features. With missing values identified in 'Age,' 'Cabin,' 'Embarked,' and 'Fare,' we strategically filled these gaps through imputation techniques tailored to each feature.
 
-Fast forward to today, and the mystery of the Titanic endures. Thanks to platforms like Kaggle, we have the opportunity to delve into this enigma using data science. The challenge is clear: can we uncover patterns in the passenger data to answer the age-old question, "what sorts of people were more likely to survive?"
+##### 1.1 Overview
+Multiple columns in both training and test sets presented missing values. Addressed using `isnull().sum()` to assess column-wise missing values.
 
-### Decoding the Dataset
+##### 1.2 Missing Values Summary
+- **Training Set:** Missing values in 'Age,' 'Cabin,' 'Embarked'
+- **Test Set:** Missing values in 'Age,' 'Cabin,' 'Fare'
 
-Before we dive into the depths of our analysis, let's acquaint ourselves with the treasure trove of information at our disposal. Our dataset is a treasure map of sorts, guiding us through the intricate details of each passenger's journey. Here's a snapshot of what we're working with:
+##### 1.3 Concatenated Dataset Approach
+Mitigated overfitting concerns by handling missing values in the concatenated training and test sets.
 
-- **PassengerId:** A unique identifier for each passenger.
-- **Survived:** Our target variable, indicating whether a passenger survived (1) or not (0).
-- **Pclass:** A window into the socio-economic class of each passenger.
-- **Demographics:** Name, sex, and age provide insights into the individual characteristics of each passenger.
-- **Family Ties:** SibSp (siblings and spouse) and Parch (parents and children) shed light on the family dynamics aboard.
-- **Logistics:** Ticket number, fare, and cabin offer logistical details of the voyage.
-- **Embarkation:** Port of embarkation reveals the starting point of each passenger's journey.
+##### 1.4 Filling Missing Values
+- **Age:** Imputed with median age based on Pclass and Sex groups.
+- **Embarked:** Filled categorical values with 'S' based on specific passenger information.
+- **Fare:** Imputed one missing value leveraging assumptions tied to family size, Pclass, and gender.
+- **Cabin:** Introduced a new 'Deck' feature, replacing 'Cabin.'
 
-Armed with this wealth of information, we're ready to set sail on our data science expedition. Our mission is clear: to build a predictive model that unlocks the secrets of survival aboard the Titanic. So, join me as we navigate the turbulent waters of data analysis, seeking to unravel the mysteries of history's most infamous shipwreck.
+#### 2. Correlations
+Exploring feature correlations revealed insights crucial for subsequent model building. Notably, we observed a significant correlation between 'Fare' and 'Pclass,' underscoring the socio-economic dynamics aboard the Titanic. These correlations guided feature selection and transformation strategies.
 
-## MISSING VALUES
+- **Highest Correlation:**
+  - Training Set: 0.5495 ('Fare' and 'Pclass')
+  - Test Set: 0.5771 ('Fare' and 'Pclass')
 
-Some columns in both the training and test sets contain missing values, notably Age, Cabin, and Embarked in the training set, and Age, Cabin, and Fare in the test set. To address this, missing Age values are filled with the median age of respective passenger class groups due to its high correlation with Age and Survived. This approach is more logical and less prone to overfitting compared to using the overall dataset's median age. With only two missing values in the Embarked column, and the passengers sharing those missing values being female, upper-class, and traveling together with the same ticket number, we can infer they likely embarked from the same port. While "C" (Cherbourg) is the most common port for upper-class female passengers, to maintain consistency, the missing values have been filled with "S" (Southampton), the most common port of embarkation overall.
+#### 3. Target Distribution in Features
 
-### Filling Missing Fare Values
+##### 3.1 Continuous Features
+Identified split points and spikes in 'Age' and 'Fare' suitable for a decision tree model. Noted higher survival rates for children and tails of the 'Fare' distribution.
 
-To address the single missing Fare value, we employed a method based on related features such as passenger class (Pclass) and family size (Parch and SibSp). We calculated the median Fare for a male traveler with a third-class ticket and no family. This approach ensures a logical estimation for the missing value, promoting consistency within the dataset.
+##### 3.2 Categorical Features
+Explored survival rates based on boarding location, family size, and other categorical features.
 
-### Analyzing Cabin and Deck Information
+#### 4. Conclusion
+Feature correlations indicate opportunities for transformation and interaction. Proposed target encoding for features with high correlations. Distinct distributions in categorical features (Pclass and Sex) with varying survival rates. Introduced 'Deck' as a feature to capture survival rates on different decks.
 
-The first letter of each cabin indicates its deck location, serving as a proxy for socio-economic status and proximity to life-saving resources. Decks B, C, D, and E, primarily for 1st class passengers, had the highest survival rates, while Deck M, designated for 2nd and 3rd class, had the lowest. To streamline analysis, we grouped similar decks: ABC for 1st class, DE for mixed-class, and FG for shared decks. Missing cabin values were labeled 'M'. Adding deck information enriches our dataset, providing insights into passenger demographics and aiding in understanding survival factors during the disaster. We also dropped the Cabin column for simplicity and to avoid redundancy.
+### B. Feature Engineering
+Drawing insights from passenger names, we extracted titles ('Mr,' 'Mrs,' etc.) and inferred marital status ('Is_Married'). Additionally, we engineered features like 'Family_Size' and leveraged target encoding to encapsulate survival rates associated with family units and ticket groups.
 
-Age and Fare display distinct split points and spikes, ideal for decision tree learning. However, differences in distribution smoothness between the training and test sets may hinder model generalization. Notably, children under 15 exhibit higher survival rates in the Age distribution, while survival rates are higher on the distribution tails in the Fare feature.
+#### 2.1 Binning Continuous Features
+To enhance model performance and interpretability, we binned continuous features like 'Age' and 'Fare' into quantile-based bins. This transformation facilitated capturing nonlinear relationships and identifying groups with differential survival rates.
+##### 2.1.1 Fare
+Binned 'Fare' into 13 quantile-based bins, revealing varied survival rates.
 
-Categorical features like Pclass and Sex offer valuable insights, with each class revealing distinct mortality rates. Passengers from Southampton show lower survival rates, contrasting with higher survival rates for those from Cherbourg. Additionally, passengers with only one family member aboard tend to have higher survival rates, as indicated by Parch and SibSp features.
+##### 2.1.2 Age
+Applied binning to 'Age' with 10 quantile-based bins, capturing groups with distinct survival rates.
 
-Features show correlations, aiding in potential feature transformation and interaction creation. Decision trees excel in capturing split points in continuous features. Categorical features' distinct distributions with varying survival rates suggest one-hot encoding and possible feature combination. The addition of Deck and removal of Cabin features streamline dataset preparation.
+#### 2.2 Frequency Encoding
+Created 'Family_Size' by summing 'SibSp,' 'Parch,' and 1, categorizing family sizes.
 
-## FEATURE ENGINEERING
+#### 2.3 Title & Is Married
+Extracted 'Title' from passenger names and introduced 'Is_Married' based on the 'Mrs' title.
 
-The Fare feature exhibits positive skewness, with extremely high survival rates on the right end. Using 13 quantile-based bins captures variations in survival rates across different fare groups, revealing low survival rates on the left and high survival rates on the right. Notably, an unusual group with high survival rates (15.742, 23.25] is identified.
+#### 2.4 Target Encoding
+Introduced features like 'Family_Survival_Rate' and 'Ticket_Survival_Rate' using target encoding.
 
-Age distribution follows a normal pattern with spikes and bumps, segmented into 10 quantile-based bins. The first bin shows the highest survival rate, while the fourth bin exhibits the lowest. Additionally, an anomalous group (34.0, 40.0] with high survival rates is identified.
+#### 2.5 Feature Transformation
+Transforming categorical features through label encoding and one-hot encoding ensured compatibility with machine learning algorithms. This step streamlined the representation of categorical data while preserving valuable information for predictive modeling.
 
-Family_size, derived from SibSp and Parch, indicates that larger family sizes correlate with higher survival rates. Categorizing family sizes as Alone, Small, Medium, and Large further illustrates this trend. Similarly, Ticket_Frequency, which accounts for group travel, reveals higher survival rates for groups of 2, 3, and 4, while solo travelers show the lowest survival rates. Unlike Family_Size, Ticket_Frequency doesn't group values to avoid redundancy and maintain information gain.
+##### 2.5.1 Label Encoding
+Applied label encoding to non-numerical features such as 'Embarked,' 'Sex,' 'Deck,' etc.
 
-### Title & Is Married
+##### 2.5.2 One-Hot Encoding
+Transformed categorical features into one-hot encoded features.
 
-Titles are extracted from the Name feature, with some rare titles corrected or grouped for accuracy. Titles like Miss, Mrs, and Ms are consolidated as they represent females, while others like Dr and Rev are categorized based on similar characteristics. The Is_Married feature is binary and indicates whether a passenger holds the Mrs title, which typically correlates with higher survival rates among females. Additionally, surnames are extracted from the Name feature to create the Family feature, essential for grouping passengers within the same family.
+### 3. Modeling - Random Forest Algorithm
+Utilized a tuned Random Forest Classifier for its robustness and predictive capabilities.
 
-Non-numeric features like Embarked, Sex, Deck, Title, and Family_Size_Grouped are label encoded using LabelEncoder to facilitate model learning. Categorical features are further converted to one-hot encoded features, except for Age and Fare, which remain ordinal.
+### C. Model Configuration:
 
-Binning of Age and Fare features aids in handling outliers and reveals homogeneous groups within the data. Family_Size and Ticket_Frequency features are created to capture family and group travel dynamics. Utilizing the Name feature, additional features like Title, Is_Married, and Family are generated, while target encoding produces features like Family_Survival_Rate and Ticket_Survival_Rate. Finally, non-numeric features are label encoded, categorical features are one-hot encoded, and redundant features are dropped post-encoding. This comprehensive feature engineering approach enhances model performance and predictive accuracy.
-
-### Model Building
-
-I created a powerful machine learning model, the single_best_model, which is a Random Forest Classifier. This model uses the Gini criterion for decision-making and consists of 1100 decision trees. Each tree has a maximum depth of 5 levels, with a minimum of 4 samples required to split a node and 5 samples required for a leaf node.
+I created a powerful machine learning model, the `single_best_model`, which is a Random Forest Classifier. This model uses the Gini criterion for decision-making and consists of 1100 decision trees. Each tree has a maximum depth of 5 levels, with a minimum of 4 samples required to split a node and 5 samples required for a leaf node.
 
 To enhance its accuracy and prevent overfitting, I set it to consider a maximum of 'auto' features for each split. Additionally, I incorporated out-of-bag (OOB) scoring for better evaluation. The model is designed to maintain consistency across runs by setting a random seed (SEED) and utilizing parallel processing with '-1' jobs for optimal performance.
 
-In wrapping up my work on the Titanic dataset, I followed a three-step approach: exploring the data, enhancing features, and building a model. The top-performing Random Forest Classifier I used reached a fantastic accuracy of 83.73%. I dealt with missing data smartly, created new features, and understood how different factors influenced survival rates.
+### D. Conclusion:
 
+In wrapping up my work on the Titanic dataset, I followed a three-step approach: exploring the data, enhancing features, and building a model. The top-performing Random Forest Classifier I used reached a fantastic accuracy of 83.73%. I dealt with missing data smartly, created new features, and understood how different factors influenced survival rates.
