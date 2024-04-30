@@ -1,4 +1,4 @@
-# Titanic Machine Learning Competition: Feature Engineering and Modeling Insights
+# Titanic Solution | Feature Engineering | Random Forest Classifiers | Advanced Solution
 
 ## Overview
 
