@@ -1,6 +1,4 @@
-# Titanic Solution | Feature Engineering | Random Forest Classifiers | Advanced Solution
-
-## Overview
+# Titanic Solution: Random Forests and Feature Engineering
 
 The journey through the Titanic dataset encompasses three pivotal stages: Exploratory Data Analysis (EDA), Feature Engineering, and Model Building.
 
