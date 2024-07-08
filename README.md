@@ -42,7 +42,8 @@ Identified split points and spikes in 'Age' and 'Fare' suitable for a decision t
 ### 3.2 Categorical Features
 Explored survival rates based on boarding location, family size, and other categorical features.
 
-#### Feature correlations indicate opportunities for transformation and interaction. Proposed target encoding for features with high correlations. Distinct distributions in categorical features (Pclass and Sex) with varying survival rates. Introduced 'Deck' as a feature to capture survival rates on different decks.
+### 3.3 Feature correlations
+Feature correlations indicate opportunities for transformation and interaction. Proposed target encoding for features with high correlations. Distinct distributions in categorical features (Pclass and Sex) with varying survival rates. Introduced 'Deck' as a feature to capture survival rates on different decks.
 
 ## B. Feature Engineering
 Drawing insights from passenger names, we extracted titles ('Mr,' 'Mrs,' etc.) and inferred marital status ('Is_Married'). Additionally, we engineered features like 'Family_Size' and leveraged target encoding to encapsulate survival rates associated with family units and ticket groups.
