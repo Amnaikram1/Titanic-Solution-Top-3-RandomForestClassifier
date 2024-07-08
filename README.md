@@ -12,18 +12,16 @@ The journey through the Titanic dataset encompasses three pivotal stages: Explor
 
 #### 1. Handling Missing Values
 The initial step in our analysis involved addressing missing values in both the training and test datasets. Utilizing `isnull().sum()`, we assessed the extent of missingness across features. With missing values identified in 'Age,' 'Cabin,' 'Embarked,' and 'Fare,' we strategically filled these gaps through imputation techniques tailored to each feature.
-
-#### 1.1 Overview
 Multiple columns in both training and test sets presented missing values. Addressed using `isnull().sum()` to assess column-wise missing values.
 
-#### 1.2 Missing Values Summary
+#### 1.1 Missing Values Summary
 - **Training Set:** Missing values in 'Age,' 'Cabin,' 'Embarked'
 - **Test Set:** Missing values in 'Age,' 'Cabin,' 'Fare'
 
-#### 1.3 Concatenated Dataset Approach
+#### 1.2 Concatenated Dataset Approach
 Mitigated overfitting concerns by handling missing values in the concatenated training and test sets.
 
-#### 1.4 Filling Missing Values
+#### 1.3 Filling Missing Values
 - **Age:** Imputed with median age based on Pclass and Sex groups.
 - **Embarked:** Filled categorical values with 'S' based on specific passenger information.
 - **Fare:** Imputed one missing value leveraging assumptions tied to family size, Pclass, and gender.
