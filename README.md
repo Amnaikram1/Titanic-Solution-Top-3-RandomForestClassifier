@@ -27,22 +27,22 @@ Mitigated overfitting concerns by handling missing values in the concatenated tr
 - **Fare:** Imputed one missing value leveraging assumptions tied to family size, Pclass, and gender.
 - **Cabin:** Introduced a new 'Deck' feature, replacing 'Cabin.'
 
-## B. Correlations
+### 2. Correlations
 Exploring feature correlations revealed insights crucial for subsequent model building. Notably, we observed a significant correlation between 'Fare' and 'Pclass,' underscoring the socio-economic dynamics aboard the Titanic. These correlations guided feature selection and transformation strategies.
 
 - **Highest Correlation:**
   - Training Set: 0.5495 ('Fare' and 'Pclass')
   - Test Set: 0.5771 ('Fare' and 'Pclass')
 
-## 3. Target Distribution in Features
+### 3. Target Distribution in Features
 
-### 3.1 Continuous Features
+#### 3.1 Continuous Features
 Identified split points and spikes in 'Age' and 'Fare' suitable for a decision tree model. Noted higher survival rates for children and tails of the 'Fare' distribution.
 
-### 3.2 Categorical Features
+#### 3.2 Categorical Features
 Explored survival rates based on boarding location, family size, and other categorical features.
 
-### 3.3 Feature correlations
+#### 3.3 Feature correlations
 Feature correlations indicate opportunities for transformation and interaction. Proposed target encoding for features with high correlations. Distinct distributions in categorical features (Pclass and Sex) with varying survival rates. Introduced 'Deck' as a feature to capture survival rates on different decks.
 
 ## B. Feature Engineering
